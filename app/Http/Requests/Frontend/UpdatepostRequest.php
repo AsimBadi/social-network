@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Frontend;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ForgotPasswordRequest extends FormRequest
+class UpdatepostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,9 @@ class ForgotPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password' => 'required|confirmed'
+            'caption' => 'nullable',
+            'images' => 'nullable',
+            'remove_image' => 'nullable'
         ];
     }
 }

@@ -100,5 +100,5 @@
             </div>
         </div>
     </div>
-    {!! JsValidator::formRequest('App\Http\Requests\RegisterRequest', '#register-form') !!}
+    {!! JsValidator::formRequest('App\Http\Requests\Frontend\RegisterRequest', '#register-form') !!}
     @endsection

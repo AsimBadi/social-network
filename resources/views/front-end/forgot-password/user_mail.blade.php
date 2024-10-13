@@ -9,7 +9,7 @@
                             <div class="brand-logo">
                                 <h4>Forgot Password</h4>
                             </div>
-                            <form class="pt-3" action="{{ route('send.mail.verify') }}" method="POST">
+                            <form class="pt-3" action="{{ route('send.mail.verify') }}" method="POST" id="verify-email">
                                 @csrf
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-lg" name="email"
@@ -34,4 +34,5 @@
             </div>
         </div>
     </div>
+{!! JsValidator::formRequest('App\Http\Requests\Frontend\UsermailRequest', '#verify-email') !!}
 @endsection

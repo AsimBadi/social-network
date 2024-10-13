@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Frontend\ProfileRequest;
+use App\Models\Post;
+use App\Models\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -12,7 +16,10 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        return view('front-end.profile-pages.profile');
+        $totalPostsByUser = Post::where('user_id', Auth::user()->id)->count();
+        $profileData = Profile::where('user_id', Auth::user()->id)->first();
+        $posts = Post::with('image')->where('user_id', Auth::user()->id)->get();
+        return view('front-end.profile-pages.profile', compact('profileData', 'posts', 'totalPostsByUser'));
     }
 
     /**
@@ -20,7 +27,7 @@ class ProfileController extends Controller
      */
     public function create()
     {
-        //
+        return view('front-end.profile-pages.create');
     }
 
     /**
@@ -44,15 +51,38 @@ class ProfileController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $profileData = Profile::findOrFail($id);
+        return view('front-end.profile-pages.create', compact('profileData'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProfileRequest $request, string $id)
     {
-        //
+        $profile = Profile::findOrFail($id);
+        
+        if ($request->remove_dp == 1) {
+            $profile->profile_picture =  'instagram_default.png';
+            $profile->save();
+        }
+        
+        if ($request->hasFile('profile_picture')) {
+            $newImagePath = time() . '.' . $request->profile_picture->getClientOriginalExtension();
+            $request->file('profile_picture')->storeAs('images', $newImagePath);
+        }else{
+            $newImagePath = $profile->profile_picture;
+        }
+
+        $profile->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'bio' => $request->bio,
+            'privacy' => $request->privacy,
+            'profile_picture' => $newImagePath
+        ]);
+
+        return redirect()->route('profile.index')->with('success', 'Your Profile Has been Updated');
     }
 
     /**

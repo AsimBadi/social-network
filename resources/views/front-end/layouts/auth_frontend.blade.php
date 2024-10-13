@@ -19,26 +19,34 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
 </head>
 <body>
-    @session('success')
-    <div class="toast position-fixed top-0 end-0 mt-5 me-3 text-bg-dark border-0 position-fixed" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
-            {{ session('success') }}
-          </div>
+  @session('success')
+  <div class="toast text-bg-success position-fixed top-0 end-0 mt-5 me-3" style="z-index: 1074;" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-body">
+          <div class="d-flex gap-4">
+              <span><i class="fa-solid fa-circle-check fa-lg"></i></span>
+              <div class="d-flex flex-grow-1 align-items-center">
+                  <span class="fw-semibold">{{ session('success') }}</span>
+              </div>
           <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    </div>
-    @endsession
+          </div>
+      </div>
+  </div>
+  @endsession
+
     @session('error')
-    <div class="toast position-fixed top-0 end-0 mt-5 me-3 text-bg-dark border-0 position-fixed" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
-                {{ session('error') }}
+    <div class="toast text-bg-danger position-fixed top-0 end-0 mt-5 me-3" style="z-index: 1074;" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-body">
+          <div class="d-flex gap-4">
+            <span><i class="fa-solid fa-circle-exclamation fa-lg"></i></span>
+            <div class="d-flex flex-grow-1 align-items-center">
+              <span class="fw-semibold">{{ session('error') }}</span>
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
           </div>
-          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-    </div>
+      </div>
     @endsession
+    
 @yield('content')
 @stack('js')
 </body>
@@ -53,10 +61,28 @@
 <script src="{{ asset('assets/js/hoverable-collapse.js') }}"></script>
 <script src="{{ asset('assets/js/todolist.js') }}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var toastElement = document.querySelector('.toast');
-    var toast = new bootstrap.Toast(toastElement);
-    toast.show();
-});
-</script>
+  document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () {
+          var toastElements = document.querySelectorAll('.toast');
+          toastElements.forEach(function (toastElement) {
+              if (toastElement) { 
+                  var toast = new bootstrap.Toast(toastElement);
+                  toast.show();
+              }
+          });
+      }, 100);
+  });
+  @session('success')
+      setTimeout(() => {
+          $('.toast').addClass('d-none');
+      }, 4000);
+  @endsession
+  
+  @session('error')
+      setTimeout(() => {
+          $('.toast').addClass('d-none');
+      }, 4000);
+  @endsession
+  </script>

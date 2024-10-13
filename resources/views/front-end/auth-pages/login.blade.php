@@ -42,6 +42,6 @@
         </div>
     </div>
 </div>
-{!! JsValidator::formRequest('App\Http\Requests\LoginRequest', '#login-form') !!}
+{!! JsValidator::formRequest('App\Http\Requests\Frontend\LoginRequest', '#login-form') !!}
 @endsection
     

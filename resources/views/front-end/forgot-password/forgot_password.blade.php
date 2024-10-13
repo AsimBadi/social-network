@@ -40,5 +40,5 @@
             </div>
         </div>
     </div>
-{!! JsValidator::formRequest('App\Http\Requests\LoginRequest', '#forgot-password-form') !!}
+{!! JsValidator::formRequest('App\Http\Requests\Frontend\ForgotpasswordRequest', '#forgot-password-form') !!}
 @endsection
