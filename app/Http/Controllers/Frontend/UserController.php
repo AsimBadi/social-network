@@ -43,20 +43,14 @@ class UserController extends Controller
             'password' => $request->password,
             'gender' => $request->gender,
             'phone_no' => $request->phone_no,
+            'profile_picture' => 'instagram_default.png',
         ]);
 
         VerifyUser::create([
             'user_id' => $user->id,
             'token' => sha1(time())
         ]);
-
-        Profile::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'profile_picture' => 'instagram_default.png',
-            'user_id' => $user->id
-        ]);
-
+        
         Mail::to($user->email)->send(new VerifyUserMail($user));
         return redirect()->back()->with('success', 'Please Check Your MailBox');
     }

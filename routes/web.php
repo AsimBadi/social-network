@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Frontend\FollowController;
 use App\Http\Controllers\Frontend\PostController;
+use App\Http\Controllers\Frontend\PostlikeController;
 use App\Http\Controllers\Frontend\ProfileController;
+use App\Http\Controllers\Frontend\SearchController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Middleware\AuthMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -22,4 +25,11 @@ Route::get('forgot-password/{token}', [UserController::class, 'forgotPassword'])
 Route::middleware(AuthMiddleware::class)->group(function () {
     Route::resource('profile', ProfileController::class);
     Route::resource('posts', PostController::class);
+    Route::resource('likes', PostlikeController::class);
+    Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
+    Route::post('search-user', [SearchController::class, 'searchUser'])->name('search.user');
+    Route::get('search/user/{username}', [SearchController::class, 'goToProfile'])->name('goto.profile');
+    Route::post('search/follow', [FollowController::class, 'followRequest']);
+    Route::get('requests', [FollowController::class, 'followRequests'])->name('follow.requests');
+    Route::post('action/request', [FollowController::class, 'actionOfRequest']);
 });

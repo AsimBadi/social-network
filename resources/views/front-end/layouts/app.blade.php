@@ -20,7 +20,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vendors/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/profile.css') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />    
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}"> 
 </head>
 
 <body class="with-welcome-text">
@@ -74,25 +75,7 @@
             </div>
         </div>
     </div>
-    {{-- Modal For Delete Confirmation --}}
-    <div class="modal fade" id="deleteConfirmation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete Record</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <i class="fa fa-times-circle x-mark"></i>
-                    <p class="delete-text">Are you Sure you want to delete?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="deletebtn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </body>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

@@ -9,7 +9,7 @@ use App\Models\Post;
 use App\Models\PostImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PhpParser\Node\Expr\PostInc;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -66,6 +66,7 @@ class PostController extends Controller
     public function edit(string $id)
     {
         $post = Post::with('image')->findOrFail($id);
+        abort_if($post->user_id != Auth::user()->id, 403);
         // $images = PostImage::where('post_id', $id)->where('user_id')->get();
         return view('front-end.posts.edit', compact('post'));
     }
@@ -76,11 +77,30 @@ class PostController extends Controller
     public function update(UpdatepostRequest $request, string $id)
     {
         $post = Post::findOrFail($id);
-
+        abort_if($post->user_id != Auth::user()->id, 403);
+        $countPostImages = PostImage::where('post_id', $id)->count();
+        
         if ($request->remove_image) {
-            PostImage::whereIn('id', $request->remove_image)->delete();
-        }
+            $remainingImages = $countPostImages - count($request->remove_image);
+            $imagesToDelete = PostImage::whereIn('id', $request->remove_image)->get();
+        
+            foreach ($imagesToDelete as $deleteImage) {
+                $imagePath = storage_path('app/public/images/' . $deleteImage); 
+                // if (file_exists($imagePath)) {
+                //     unlink($imagePath);
+                // }
+                if (Storage::disk('public')->exists($imagePath)) {
+                    Storage::disk('public')->delete($imagePath);
+                }
+            }
 
+            if ($remainingImages > 0) {
+                PostImage::whereIn('id', $request->remove_image)->delete();
+            }else{
+                return redirect()->back()->with('error', 'You have to keep one Image');
+            }
+        }
+        
         $post->update([
             'caption' => $request->caption,
         ]);

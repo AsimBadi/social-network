@@ -36,9 +36,9 @@
     </div>
 </div>
 </form>
-<div class="col-md-3 mt-3 d-flex justify-content-center @if ($profileData->profile_picture === 'instagram_default.png') d-none @endif">
+<div class="col-md-3 mt-3 d-flex justify-content-center @if ($profileData->profile_picture == null) d-none @endif">
     <div class="card bg-dark" style="width: 12rem;">
-            <img src="{{ asset('storage/images/' . $profileData->profile_picture) }}" class="card-img-top delete-img" alt="" style="">
+            <img src="{{ $profileData->image_url }}" class="card-img-top delete-img" alt="" style="">
             <div class="card-body">
                 <div class="form-check form-check-danger">
                     <label class="form-check-label text-light">

@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Frontend\ProfileRequest;
+use App\Models\FollowUser;
 use App\Models\Post;
-use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,9 +18,10 @@ class ProfileController extends Controller
     public function index()
     {
         $totalPostsByUser = Post::where('user_id', Auth::user()->id)->count();
-        $profileData = Profile::where('user_id', Auth::user()->id)->first();
-        $posts = Post::with('image')->where('user_id', Auth::user()->id)->get();
-        return view('front-end.profile-pages.profile', compact('profileData', 'posts', 'totalPostsByUser'));
+        $profileData = User::where('id', Auth::user()->id)->first();
+        $posts = Post::withCount(['image', 'likes'])->where('user_id', Auth::user()->id)->get();
+        $userFollowers = FollowUser::where('user_id', Auth::user()->id)->count();
+        return view('front-end.profile-pages.profile', compact('profileData', 'posts', 'totalPostsByUser', 'userFollowers'));
     }
 
     /**
@@ -27,7 +29,7 @@ class ProfileController extends Controller
      */
     public function create()
     {
-        return view('front-end.profile-pages.create');
+        return view('front-end.profile-pages.edit');
     }
 
     /**
@@ -51,8 +53,8 @@ class ProfileController extends Controller
      */
     public function edit(string $id)
     {
-        $profileData = Profile::findOrFail($id);
-        return view('front-end.profile-pages.create', compact('profileData'));
+        $profileData = User::findOrFail($id);
+        return view('front-end.profile-pages.edit', compact('profileData'));
     }
 
     /**
@@ -60,15 +62,15 @@ class ProfileController extends Controller
      */
     public function update(ProfileRequest $request, string $id)
     {
-        $profile = Profile::findOrFail($id);
+        $profile = User::findOrFail($id);
         
         if ($request->remove_dp == 1) {
-            $profile->profile_picture =  'instagram_default.png';
+            $profile->profile_picture =  null;
             $profile->save();
         }
         
         if ($request->hasFile('profile_picture')) {
-            $newImagePath = time() . '.' . $request->profile_picture->getClientOriginalExtension();
+            $newImagePath = uniqid() . '.' . $request->profile_picture->getClientOriginalExtension();
             $request->file('profile_picture')->storeAs('images', $newImagePath);
         }else{
             $newImagePath = $profile->profile_picture;

@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
         return [
             'first_name' => 'required',
             'last_name' => 'required',
-            'username' => "required|unique:users,username|regex:/^\S+$/",
+            'username' => "required|unique:users,username|regex:/^[a-zA-Z0-9_]*$/",
             'email' => 'required|unique:users,email',
             'password' => 'required|confirmed',
             'phone' => 'nullable',
