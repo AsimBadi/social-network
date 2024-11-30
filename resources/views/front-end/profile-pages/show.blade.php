@@ -103,7 +103,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/search/follow",
+                    url: "{{ route('search.follow') }}",
                     data: {
                         userId: userId
                     },

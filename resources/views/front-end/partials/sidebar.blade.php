@@ -21,21 +21,15 @@
         </a>
       </li>
 
-      <li class="nav-item @if(Request::is('requests*')) active @endif" style="position: relative;">
+      <li class="nav-item @if(Request::is('requests*')) active @endif">
         <a class="nav-link" href="{{ route('follow.requests') }}">
-          <div style="position: relative; display: inline-block;">
-            <i class="fa-solid fa-user-group fa-lg"></i>
-            <!-- Small icon with count on top -->
-            <span class="badge badge-pill badge-danger count-badge">
-              6
-            </span>
-          </div>
-          <span class="menu-title"><i class="fa-envelope-o"></i> Requests</span>
+          <i class="fa-solid fa-user-group fa-lg"></i>
+          <span class="menu-title"><i class="fa-envelope-o"></i>Requests</span>
         </a>
       </li>
 
-      <li class="nav-item @if(Request::is('requests*')) active @endif">
-        <a class="nav-link" href="{{ route('follow.requests') }}">
+      <li class="nav-item @if(Request::is('explore*')) active @endif">
+        <a class="nav-link" href="{{ route('explore.posts') }}">
           <i class="fa-solid fa-house fa-lg"></i>
           <span class="menu-title"><i class="fa-envelope-o"></i>Explore</span>
         </a>

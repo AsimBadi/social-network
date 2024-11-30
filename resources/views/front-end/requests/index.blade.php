@@ -37,7 +37,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "action/request",
+                url: "{{ route('action.request') }}",
                 data: {
                     valueOfBtn: valueOfbtn,
                     followedById: followedById

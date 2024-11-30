@@ -161,22 +161,36 @@
     color: red;
 }
 
-.follow-btn{
+/* .follow-btn{
     width: 150px;
     height: 40px;
     padding: 4px;
+} */
+
+.follow-btn {
+    width: 150px;
+    height: 40px;
+    display: flex;
+    justify-content: center; /* Horizontal centering */
+    align-items: center;    /* Vertical centering */
+    text-align: center;     /* Ensures text is centered within the button */
+    padding: 0;             /* No extra padding that may affect centering */
+    font-size: 14px;        /* Adjust font size if necessary */
+    border: none;           /* Remove default border if it's affecting alignment */
+    cursor: pointer;        /* Make it look like a button */
 }
 
-.count-badge {
-    position: absolute;
-    top: -5px; /* Adjust to position above the icon */
-    right: -10px; /* Adjust to align with the right side of the icon */
-    font-size: 0.6rem; /* Smaller font size */
-    padding: 2px 5px;
-    border-radius: 50%; /* Circular shape */
-    background-color: #ff0000; /* Red background */
-    color: #ffffff; /* White text */
-    font-weight: bold;
+
+/* Custom class for carousel images */
+.custom-carousel-image {
+    height: 500px;
+    max-width: 80%;  /* Adjust the width as needed (e.g., 80% of the container) */
+    max-height: 400px; /* Limit the maximum height to 400px (or adjust as needed) */
+    object-fit: cover;  /* Ensures the image covers the space without distortion */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
+  
   
   

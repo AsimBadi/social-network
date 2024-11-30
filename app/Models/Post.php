@@ -23,6 +23,10 @@ class Post extends Model
         return $this->hasMany(PostLike::class, 'post_id', 'id');
     }
 
+    public function getLikesCountAttribute() {
+        return $this->likes()->where('user_id', Auth::user()->id)->count();
+    }
+
     public function getUserLikesAttribute() {
         return $this->likes()->where('user_id', Auth::user()->id)->exists();
     }

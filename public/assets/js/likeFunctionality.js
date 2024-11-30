@@ -11,7 +11,7 @@ document.querySelectorAll('.likebtn').forEach(element => {
 
         $.ajax({
             type: "POST",
-            url: "/likes/",
+            url: "/user/likes/",
             data: {
                 postId: postId
             },

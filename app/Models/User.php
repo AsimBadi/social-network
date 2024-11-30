@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'is_user_following'];
     /**
      * The attributes that are mass assignable.
      *
@@ -88,5 +88,9 @@ class User extends Authenticatable
 
     public function getFollowingsAttribute() {
         return $this->followings()->where('status', 2)->count();
+    }
+
+    public function getIsUserFollowingAttribute() {
+        return FollowUser::where('followed_by_id', Auth::user()->id)->where('user_id',$this->id)->get();
     }
 }
