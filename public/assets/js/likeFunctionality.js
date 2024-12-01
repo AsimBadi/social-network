@@ -17,11 +17,11 @@ document.querySelectorAll('.likebtn').forEach(element => {
             },
             success: function (response) {
                 if (response.status == 200) {
-                    $(element).addClass('after-like');
+                    $(element).find('.like_icon').addClass('after-like');
                     $(`#like-count-${postId}`).html(response.message + ' Likes');
 
                 }else if (response.status == 400) {
-                    $(element).removeClass('after-like');
+                    $(element).find('.like_icon').removeClass('after-like');
                     $(`#like-count-${postId}`).html(response.message + ' Likes');
                 }
             }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Frontend\CommentController;
 use App\Http\Controllers\Frontend\ExploreController;
 use App\Http\Controllers\Frontend\FollowController;
 use App\Http\Controllers\Frontend\PostController;
@@ -8,7 +9,9 @@ use App\Http\Controllers\Frontend\ProfileController;
 use App\Http\Controllers\Frontend\SearchController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Middleware\AuthMiddleware;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 Route::get('user/register', [UserController::class, 'register'])->name('register');
 Route::get('user', [UserController::class, 'login'])->name('login');
@@ -46,4 +49,10 @@ Route::middleware(AuthMiddleware::class)->prefix('user')->group(function () {
     Route::get('requests', [FollowController::class, 'followRequests'])->name('follow.requests');
     Route::post('action/request', [FollowController::class, 'actionOfRequest'])->name('action.request');
     Route::get('explore', [ExploreController::class, 'explorePosts'])->name('explore.posts');
+    Route::get('load/followers', [ProfileController::class, 'showFollowers'])->name('load.followers');
+    Route::get('load/followings', [ProfileController::class, 'showFollowings'])->name('load.followings');
+    Route::get('remove/follower', [ProfileController::class, 'removeFollower'])->name('remove.follower');
+    Route::post('submit/comment', [CommentController::class, 'submitComment'])->name('submit.comment');
+    Route::get('load/comments', [CommentController::class, 'loadComments'])->name('load.comments');
+    Route::post('remove/comment', [CommentController::class, 'removeComment'])->name('remove.comment');
 });

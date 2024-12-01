@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Frontend\ProfileRequest;
 use App\Models\FollowUser;
 use App\Models\Post;
+use App\Models\PostLike;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -93,5 +94,26 @@ class ProfileController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function showFollowers(Request $request) {
+        if ($request->ajax()) {
+            $followers = FollowUser::with('users')->where('user_id', Auth::user()->id)->where('status', 2)->get();
+            return response()->json($followers, 200);
+        }
+    }
+
+    public function showFollowings(Request $request) {
+        if ($request->ajax()) {
+            $followings = FollowUser::with('followings')->where('followed_by_id', Auth::user()->id)->where('status', 2)->get();
+            return response()->json($followings, 200);
+        }
+    }
+
+    public function removeFollower(Request $request) {
+        if ($request->ajax()) {
+            FollowUser::where('user_id', Auth::user()->id)->where('followed_by_id', $request->followed_by_id)->delete();
+            return response()->json(true, 200);
+        }
     }
 }

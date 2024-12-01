@@ -76,20 +76,50 @@
                             </button>
                         </div>
                         <div class="card-body text-light">
+                            {{-- @dd($post) --}}
                             <p class="card-text">{{ $post->caption }}</p>
                             <p id="like-count-{{ $post->id }}">{{ $post->likes_count }} Likes</p>
-                            <i class="fa-solid fa-heart fa-lg me-2 likebtn  @if ($post->user_likes)
-                                after-like
-                            @endif" data-post-id="{{ $post->id }}"></i>
+                            <button class="btn btn-outline-info editBtnForPost ms-0 likebtn" data-post-id="{{ $post->id }}"><i class="fa-solid fa-heart like_icon  @if ($post->user_likes) after-like @endif"></i></button>
+                            <button class="btn btn-outline-secondary editBtnForPost comment_section_modal_class" data-bs-toggle="modal" data-bs-target="#commentSection" id="comment_section_modal_btn" data-post-id="{{ $post->id }}">
+                                <i class="fa-solid fa-comment"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             @endforeach
     @endif
+    {{-- Modal For Showing Comments --}}
+    <div class="modal fade" id="commentSection" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Comments</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body append_comments" id="append_comments_div">
+                    {{-- append comments --}}                  
+                </div>
+                <div class="modal-footer d-flex align-items-center">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control append_post_id comment_input_value" name="comment_input" id="comment_input_area" placeholder="Type here...">
+                        <button class="btn btn-primary submitbtn" type="button" id="comment_submit"><i class="fa-solid fa-arrow-up"></i></button>
+                      </div>
+                </div>                
+            </div>
+        </div>
+    </div>
     <script src="{{ asset('assets/js/likeFunctionality.js') }}"></script>
+    <script src="{{ asset('assets/js/commentFunctionality.js') }}"></script>
 @endsection
 @push('js')
     <script>
+        window.appRoutes = {
+            loadComments: "{{ route('load.comments') }}",
+            submitComment: "{{ route('submit.comment') }}",
+            gotoProfile: "{{ route('goto.profile', ':username') }}",
+            userId: @json(Auth::user()->id),
+            removeComment: "{{ route('remove.comment') }}"
+        }
         $(document).ready(function () {
             $('.follow-btn').click(function (e) { 
                 e.preventDefault();

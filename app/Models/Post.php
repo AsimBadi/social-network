@@ -24,7 +24,7 @@ class Post extends Model
     }
 
     public function getLikesCountAttribute() {
-        return $this->likes()->where('user_id', Auth::user()->id)->count();
+        return $this->likes()->where('post_id', $this->id)->count();
     }
 
     public function getUserLikesAttribute() {

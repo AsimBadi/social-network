@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Frontend\PostRequest;
 use App\Http\Requests\Frontend\UpdatepostRequest;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostImage;
+use App\Models\PostLike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -124,8 +126,12 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        Post::findOrFail($id)->delete();
-        PostImage::where('post_id', $id)->delete();
-        return redirect()->route('profile.index')->with('success', 'Your post has been Deleted');
+        if (request()->ajax()) {
+            Post::findOrFail($id)->delete();
+            PostImage::where('post_id', $id)->delete();
+            Comment::where('post_id', $id)->delete();
+            PostLike::where('post_id', $id)->delete();
+            return response()->json(true, 200);
+        }
     }
 }

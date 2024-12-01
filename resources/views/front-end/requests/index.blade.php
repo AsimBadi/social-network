@@ -19,7 +19,9 @@
     </div>
 </div>
 @empty
-    <h2 class="text-center">No Requests Available</h2>
+    <div class="d-flex justify-content-center mt-0">
+        <img src="{{ asset('assets/images/blank_inbox_email.png') }}" alt="">
+    </div>
 @endforelse
 @endsection
 @push('js')

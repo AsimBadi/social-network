@@ -192,5 +192,11 @@
     margin-right: auto;
   }
   
+  .custom-toast {
+    width: 100%; /* Adjust the width to fit the modal */
+    max-width: 600px; /* Optional: Set a maximum width to prevent it from being too large */
+    margin: 0 auto; /* Center the toast within the modal */
+}
+
   
   
