@@ -47,8 +47,8 @@ function loadComments(postId) {
                         <div class="toast-body">
                             <a href="${profileLink}"><img src="${element.user.image_url}" width="30px" height="30px" class="rounded-circle" alt=""></a>
                             <span class="ms-2">${element.comment}</span>
-                        </div>`;
-                    if (element.user.id == userId) {
+                        </div>`;                        
+                    if (element.user_id == userId || element.post.user_id == userId ) {
                         html += `<button type="button" class="btn btn-white me-2 m-auto remove_comment" data-user-id="${userId}" data-comment-id="${element.id}"><i class="fa-solid fa-trash-can"></i></button>`;
                     }
                     html += `</div>
@@ -62,14 +62,12 @@ function loadComments(postId) {
 }
 // remove comment
 $(document).on('click', '.remove_comment', function () {
-    const userId = $(this).data('user-id');
     const commentId = $(this).data('comment-id');
     
     $.ajax({
         type: "POST",
         url: window.appRoutes.removeComment,
         data: {
-            user_id: userId,
             comment_id: commentId
         },
         headers: {

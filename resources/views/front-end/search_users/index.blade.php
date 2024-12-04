@@ -1,4 +1,5 @@
 @extends('front-end.layouts.app')
+@section('title', 'Search User')
 @section('content')
     <div class="row">
         <div class="input-group">

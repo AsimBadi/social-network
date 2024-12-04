@@ -1,4 +1,5 @@
 @extends('front-end.layouts.app')
+@section('title', 'Profile')
 @section('content')
 <form action="{{ route('profile.update', $profileData->id) }}" method="POST" enctype="multipart/form-data">
     <div class="container-fluid row">

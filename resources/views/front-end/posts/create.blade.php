@@ -1,4 +1,5 @@
 @extends('front-end.layouts.app')
+@section('title', 'Posts')
 @section('content')
     <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data" id="post-form">
         @csrf

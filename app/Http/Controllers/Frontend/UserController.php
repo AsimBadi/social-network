@@ -69,7 +69,7 @@ class UserController extends Controller
     public function loginCheck(LoginRequest $request) {
         $isUserVerified = User::where('email', $request->email)->first();
         $crenditials = $request->only('email', 'password');
-        
+
         if(!$isUserVerified) {
             return redirect()->back()->with('error', 'Please register first');
         }

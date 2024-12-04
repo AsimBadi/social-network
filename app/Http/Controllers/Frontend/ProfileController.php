@@ -19,10 +19,9 @@ class ProfileController extends Controller
     public function index()
     {
         $totalPostsByUser = Post::where('user_id', Auth::user()->id)->count();
-        $profileData = User::where('id', Auth::user()->id)->first();
         $posts = Post::withCount(['image', 'likes'])->where('user_id', Auth::user()->id)->get();
         $userFollowers = FollowUser::where('user_id', Auth::user()->id)->count();
-        return view('front-end.profile-pages.profile', compact('profileData', 'posts', 'totalPostsByUser', 'userFollowers'));
+        return view('front-end.profile-pages.profile', compact('posts', 'totalPostsByUser', 'userFollowers'));
     }
 
     /**
@@ -55,6 +54,7 @@ class ProfileController extends Controller
     public function edit(string $id)
     {
         $profileData = User::findOrFail($id);
+        abort_if($profileData->id != Auth::user()->id, 403);
         return view('front-end.profile-pages.edit', compact('profileData'));
     }
 
@@ -98,15 +98,37 @@ class ProfileController extends Controller
 
     public function showFollowers(Request $request) {
         if ($request->ajax()) {
-            $followers = FollowUser::with('users')->where('user_id', Auth::user()->id)->where('status', 2)->get();
-            return response()->json($followers, 200);
+            if ($request->other_user == 'not_author') {
+                $isUserPrivate = User::find($request->user_id);
+                $isUserFollowing = FollowUser::where('user_id', $request->user_id)->where('followed_by_id', Auth::user()->id)->exists();
+                if ($isUserPrivate->privacy == 2 && !$isUserFollowing) {
+                    return response()->json(true, 400);
+                }else{
+                $followers = FollowUser::with('users')->where('user_id', $request->user_id)->where('status', 2)->get();
+                return response()->json($followers, 200);
+                }
+            }else{
+                $followers = FollowUser::with('users')->where('user_id', Auth::user()->id)->where('status', 2)->get();
+                return response()->json($followers, 200);
+            }
         }
     }
 
     public function showFollowings(Request $request) {
         if ($request->ajax()) {
-            $followings = FollowUser::with('followings')->where('followed_by_id', Auth::user()->id)->where('status', 2)->get();
-            return response()->json($followings, 200);
+            if ($request->other_user == 'not_author') {
+                $isUserPrivate = User::find($request->user_id);
+                $isUserFollowing = FollowUser::where('user_id', $request->user_id)->where('followed_by_id', Auth::user()->id)->exists();
+                if ($isUserPrivate->privacy == 2 && !$isUserFollowing) {
+                    return response()->json(true, 400);
+                }else{
+                $followings = FollowUser::with('followings')->where('followed_by_id', $request->user_id)->where('status', 2)->get();
+                return response()->json($followings, 200);
+                }
+            }else{
+                $followings = FollowUser::with('followings')->where('followed_by_id', Auth::user()->id)->where('status', 2)->get();
+                return response()->json($followings, 200);
+            }
         }
     }
 

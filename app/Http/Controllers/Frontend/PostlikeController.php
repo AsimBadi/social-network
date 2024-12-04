@@ -31,7 +31,6 @@ class PostlikeController extends Controller
     public function store(Request $request)
     {
         $isUserAlreadyLiked = PostLike::where('post_id', $request->postId)->where('user_id', Auth::user()->id)->first();
-        $likesCount = PostLike::where('post_id', $request->postId)->count();
         if ($isUserAlreadyLiked) {
             $isUserAlreadyLiked->delete();
             $countAfterDelete = PostLike::where('post_id', $request->postId)->count();

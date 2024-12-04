@@ -14,7 +14,7 @@ class ExploreController extends Controller
     public function explorePosts(Request $request) {
         $page = $request->input('page', 1);
         $publicPrivacyUser = User::where('privacy', 1)->pluck('id')->toArray();
-        $publicUserPosts = Post::with(['image', 'likes'])->whereIn('user_id', $publicPrivacyUser)->paginate(10, ['*'], 'page', $page);
+        $publicUserPosts = Post::with(['image', 'likes', 'user'])->whereIn('user_id', $publicPrivacyUser)->paginate(10, ['*'], 'page', $page);
         $usersFollowingList = FollowUser::where('followed_by_id', Auth::user()->id)->where('status', 2)->pluck('user_id')->toArray();
         
         if ($request->ajax()) {

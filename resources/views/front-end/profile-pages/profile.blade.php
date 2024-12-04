@@ -1,28 +1,29 @@
 @extends('front-end.layouts.app')
+@section('title', 'Profile')
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            <img src="{{ $profileData->image_url }}" class="profile-picture" alt="">
+            <img src="{{ Auth::user()->image_url }}" class="profile-picture" alt="">
         </div>
         <div class="col-md-3 text-center">
             <h4>Posts</h4>
-            <h2>{{ $profileData->post }}</h2>
+            <h2>{{ Auth::user()->post }}</h2>
         </div>
         <div class="col-md-3 text-center">
             <h4 data-bs-toggle="modal" data-bs-target="#followers_modal" class="load_followers">Followers</h4>
-            <h2 data-bs-toggle="modal" data-bs-target="#followers_modal" class="load_followers">{{ $profileData->follower_count }}</h2>
+            <h2 data-bs-toggle="modal" data-bs-target="#followers_modal" class="load_followers">{{ Auth::user()->follower_count }}</h2>
         </div>
         <div class="col-md-3 text-center">
             <h4 data-bs-toggle="modal" data-bs-target="#followings_modal" class="load_followings">Followings</h4>
-            <h2 data-bs-toggle="modal" data-bs-target="#followings_modal" class="load_followings">{{ $profileData->followings }}</h2>
+            <h2 data-bs-toggle="modal" data-bs-target="#followings_modal" class="load_followings">{{ Auth::user()->followings }}</h2>
         </div>
     </div>
     <div class="row mt-2">
-        <h4>{{ $profileData->first_name }} {{ $profileData->last_name }}</h4>
-        <h4>{!! nl2br(e($profileData->bio)) !!}</h4>
+        <h4>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h4>
+        <h4>{!! nl2br(e(Auth::user()->bio)) !!}</h4>
     </div>
     <div>
-        <a href="{{ route('profile.edit', $profileData->id) }}" class="btn btn-dark mt-2 editbtn">Edit Profile</a>
+        <a href="{{ route('profile.edit', Auth::user()->id) }}" class="btn btn-dark mt-2 editbtn">Edit Profile</a>
     </div>
     <hr>
 
@@ -94,36 +95,10 @@
             </div>
         </div>
     </div>
-    {{-- Modal For Showing Followers --}}
-    <div class="modal fade" id="followers_modal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Followers</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="followers_append_div">
-                    {{-- append followers --}}
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- Modal For Showing Followings --}}
-    <div class="modal fade" id="followings_modal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Followings</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="followings_append_div">
-                    {{-- append followings --}}
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('front-end.modals.modal')
     <script src="{{ asset('assets/js/likeFunctionality.js') }}"></script>
     <script src="{{ asset('assets/js/commentFunctionality.js') }}"></script>
+    <script src="{{ asset('assets/js/FollowListFunctionality.js') }}"></script>
 @endsection
 @push('js')
     <script>
@@ -132,7 +107,11 @@ window.appRoutes = {
     submitComment: "{{ route('submit.comment') }}",
     gotoProfile: "{{ route('goto.profile', ':username') }}",
     userId: @json(Auth::user()->id),
-    removeComment: "{{ route('remove.comment') }}"
+    removeComment: "{{ route('remove.comment') }}",
+    likeRoute: "{{ route('likes.store') }}",
+    removeFollower: "{{ route('remove.follower') }}",
+    loadFollowers: "{{ route('load.followers') }}",
+    loadFollowings: "{{ route('load.followings') }}",
 }
 // Remove Post
 $(document).on('click', '.delete_post_btn', function (e) { 
@@ -229,7 +208,7 @@ $(document).on('click', '.delete_post_btn', function (e) {
                                 </div>
                                 <div class="d-flex align-items-center flex-grow-1 justify-content-center">
                                     <a href="${profileLink}" style="text-decoration: none; color: inherit;">
-                                        <span>${element.users.first_name} ${element.users.last_name}</span>    
+                                        <span>${element.users.username}</span>    
                                     </a>
                                 </div>
                                 <div class="d-flex align-items-center">
@@ -265,7 +244,7 @@ $('.load_followings').click(function (e) {
                         </div>
                         <div class="d-flex align-items-center flex-grow-1 justify-content-center">
                             <a href="${profileLink}" style="text-decoration: none; color: inherit;">
-                                <span>${element.followings.first_name} ${element.followings.last_name}</span>    
+                                <span>${element.followings.username}</span>    
                             </a>
                         </div>
                         <div class="d-flex align-items-center">

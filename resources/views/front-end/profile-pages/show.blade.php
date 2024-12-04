@@ -1,4 +1,5 @@
 @extends('front-end.layouts.app')
+@section('title', 'Profile')
 @section('content')
     <div class="row">
         <div class="col-md-3">
@@ -9,12 +10,12 @@
             <h2>{{ $user->post }}</h2>
         </div>
         <div class="col-md-3 text-center">
-            <h4>Followers</h4>
-            <h2>{{ $user->follower_count }}</h2>
+            <h4 data-bs-toggle="modal" data-bs-target="#followers_modal" data-user-id="{{ $user->id }}" class="load_followers">Followers</h4>
+            <h2 data-bs-toggle="modal" data-bs-target="#followers_modal" data-user-id="{{ $user->id }}" class="load_followers">{{ $user->follower_count }}</h2>
         </div>
         <div class="col-md-3 text-center">
-            <h4>Followings</h4>
-            <h2>{{ $user->followings }}</h2>
+            <h4 data-bs-toggle="modal" data-bs-target="#followings_modal" data-user-id="{{ $user->id }}" class="load_followings">Followings</h4>
+            <h2 data-bs-toggle="modal" data-bs-target="#followings_modal" data-user-id="{{ $user->id }}" class="load_followings">{{ $user->followings }}</h2>
         </div>
     </div>
     <div class="row mt-2">
@@ -108,8 +109,10 @@
             </div>
         </div>
     </div>
+    @include('front-end.modals.modal')
     <script src="{{ asset('assets/js/likeFunctionality.js') }}"></script>
     <script src="{{ asset('assets/js/commentFunctionality.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/FollowListFunctionality.js') }}"></script> --}}
 @endsection
 @push('js')
     <script>
@@ -118,7 +121,11 @@
             submitComment: "{{ route('submit.comment') }}",
             gotoProfile: "{{ route('goto.profile', ':username') }}",
             userId: @json(Auth::user()->id),
-            removeComment: "{{ route('remove.comment') }}"
+            removeComment: "{{ route('remove.comment') }}",
+            likeRoute: "{{ route('likes.store') }}",
+            removeFollower: "{{ route('remove.follower') }}",
+            loadFollowers: "{{ route('load.followers') }}",
+            loadFollowings: "{{ route('load.followings') }}",
         }
         $(document).ready(function () {
             $('.follow-btn').click(function (e) { 
@@ -158,6 +165,81 @@
                     }
                 });
             });
+        });
+
+        $('.load_followers').click(function (e) { 
+            e.preventDefault();
+            const userId = $(this).data('user-id');
+            $.ajax({
+                type: "GET",
+                url: window.appRoutes.loadFollowers,
+                data: {
+                    other_user: 'not_author',
+                    user_id: userId
+                },
+                success: function (response) {
+                    $('#followers_append_div').empty();
+                    response.forEach(element => {
+                        let profileLink = "{{ route('goto.profile', ':username') }}".replace(':username', element.users.username);                        
+                        html = `
+                        <div id="follower-id-${element.users.id}">
+                            <div class="d-flex justify-content-between align-items-center mt-1 border border-light bg-light p-2 mt-1 rounded-1">
+                                <div class="d-flex align-items-center">
+                                    <a href="${profileLink}">
+                                        <img src="${element.users.image_url}" class="rounded-circle"
+                                        width="50px" height="50px" alt="">    
+                                    </a>
+                                </div>
+                                <div class="d-flex align-items-center flex-grow-1 justify-content-center">
+                                    <a href="${profileLink}" style="text-decoration: none; color: inherit;">
+                                        <span>${element.users.first_name} ${element.users.last_name}</span>    
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                $('#followers_append_div').append(html);
+            });
+                }
+            });
+        });
+
+        // load Followings
+        $('.load_followings').click(function (e) { 
+        e.preventDefault();
+        const userId = $(this).data('user-id');
+        $.ajax({
+        type: "GET",
+        url: window.appRoutes.loadFollowings,
+        data: {
+            other_user: 'not_author',
+            user_id: userId
+        },
+        success: function (response) {
+            $('#followings_append_div').empty();
+            response.forEach(element => {
+                let profileLink = "{{ route('goto.profile', ':username') }}".replace(':username', element.followings.username);
+                html = `
+                <div id="following-id-${element.followings.id}">
+                    <div class="d-flex justify-content-between align-items-center mt-1 border border-light bg-light p-2 mt-1 rounded-1">
+                        <div class="d-flex align-items-center">
+                            <a href="${profileLink}">
+                                <img src="${element.followings.image_url}" class="rounded-circle"
+                                width="50px" height="50px" alt="">    
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center flex-grow-1 justify-content-center">
+                            <a href="${profileLink}" style="text-decoration: none; color: inherit;">
+                                <span>${element.followings.first_name} ${element.followings.last_name}</span>    
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                `;
+                $('#followings_append_div').append(html);
+            });
+        }
+        });
         });
     </script>
 

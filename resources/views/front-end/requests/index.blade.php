@@ -1,4 +1,5 @@
 @extends('front-end.layouts.app')
+@section('title', 'Requests')
 @section('content')
 @forelse ($followRequests as $request)
 

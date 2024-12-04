@@ -23,15 +23,15 @@ class CommentController extends Controller
 
     public function loadComments(Request $request) {
         if ($request->ajax()) {
-            $comments = Comment::with('user')->where('post_id', $request->post_id)->get();
+            $comments = Comment::with(['user', 'post.user'])->where('post_id', $request->post_id)->get();
             return response()->json($comments, 200);
         }
     }
 
     public function removeComment(Request $request) {
         if ($request->ajax()) {
-            $comment = Comment::find($request->comment_id);
-            abort_if($comment->user_id != $request->user_id, 403);
+            $comment = Comment::with('post')->find($request->comment_id);
+            abort_if($comment->user_id != Auth::user()->id && $comment->post->user_id != Auth::user()->id, 403);
             $comment->delete();
             return response()->json(true, 200);
         }

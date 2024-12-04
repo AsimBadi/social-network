@@ -1,4 +1,5 @@
 @extends('front-end.layouts.app')
+@section('title', 'Explore')
 @section('content')
     <div class="container">
         <div class="d-flex justify-content-center">
@@ -23,6 +24,7 @@
     <script>
         let currentPage = 1;
         let currentButton = 'explore';
+        let isLoading = false;
 
         $('.explor_btn').on('click', function() {
             const buttonValue = $(this).val();
@@ -35,6 +37,7 @@
 
                 $('#append-posts').empty();
                 currentPage = 1;
+                isLoading = false;
 
                 if (currentButton === 'explore') {
                     publicPosts(currentPage);
@@ -45,6 +48,9 @@
         });
 
         function publicPosts(page) {
+            if (isLoading) return;
+            isLoading = true;
+
             $.ajax({
                 url: "{{ route('explore.posts') }}",
                 type: 'GET',
@@ -56,14 +62,21 @@
                     if (response.trim() !== '') {
                         $('#append-posts').append(response);
                         currentPage++;
-                    } else {
-                        console.log('No more posts to load.');
                     }
                 },
+                complete: function() {
+                    isLoading = false;
+                },
+                error: function(error) {
+                    isLoading = false;
+                }
             });
         }
 
         function followingsPosts(page) {
+            if (isLoading) return;
+            isLoading = true;
+
             $.ajax({
                 url: "{{ route('explore.posts') }}",
                 type: 'GET',
@@ -75,10 +88,14 @@
                     if (response.trim() !== '') {
                         $('#append-posts').append(response);
                         currentPage++;
-                    } else {
-                        console.log('No more posts to load.');
                     }
                 },
+                complete: function() {
+                    isLoading = false;
+                },
+                error: function(error) {
+                    isLoading = false;
+                }
             });
         }
 
@@ -87,7 +104,7 @@
             const scrollHeight = $(document).height();
             const windowHeight = $(this).height();
 
-            if (scrollTop + windowHeight >= scrollHeight - 50) {
+            if (scrollTop + windowHeight >= scrollHeight - 50 && !isLoading) {
                 if (currentButton === 'explore') {
                     publicPosts(currentPage);
                 } else if (currentButton === 'followings') {
@@ -95,5 +112,40 @@
                 }
             }
         });
+        // Follow
+        $(document).on('click', '.user_following', function (e) {
+    e.preventDefault();
+    const userId = $(this).data('following-by-id');
+    $.ajax({
+        type: "POST",
+        url: "{{ route('search.follow') }}",
+        data: {
+            userId: userId
+        },
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            if (response.status == 200) {
+                $(`#explore-${userId}`).removeClass('btn-dark');
+                $(`#explore-${userId}`).addClass('btn-light');
+                $(`#explore-${userId}`).text(response.message);
+                if (response.message == 'Follow') {
+                    $(`#explore-${userId}`).addClass('btn-dark');
+                    $(`#explore-${userId}`).removeClass('btn-light');
+                }
+            }else if (response.status == 400) {
+                $(`#explore-${userId}`).removeClass('btn-dark');
+                $(`#explore-${userId}`).addClass('btn-light');
+                $(`#explore-${userId}`).text(response.message);
+                if (response.message == 'Follow') {
+                    $(`#explore-${userId}`).addClass('btn-dark');
+                    $(`#explore-${userId}`).removeClass('btn-light');
+                }
+            }
+        }
+    });
+});
+
     </script>
 @endpush
