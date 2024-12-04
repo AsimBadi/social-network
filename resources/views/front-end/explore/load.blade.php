@@ -5,7 +5,6 @@
             <a href="{{ route('goto.profile', $post->user->username) }}" style="text-decoration: none; color: ingerit;"><img src="{{ $post->user->image_url }}" style="object-fit: cover; width: 50px; height: 50px" class="rounded-circle ms-3"></a>
             <a href="{{ route('goto.profile', $post->user->username) }}" style="text-decoration: none; color: ingerit;"><h4 class="text-white ms-2">{{ $post->user->username }}</h4></a>
             @if (count($post->user->is_user_following) == 0)
-            {{-- @endif --}}
             <button class="btn btn-dark ms-auto me-2 follow-btn user_following" id="explore-{{ $post->user->id }}" data-following-by-id="{{ $post->user->id }}">Follow</button>
             @endif
             @foreach ($post->user->is_user_following as $alreadyFollowed)
@@ -42,7 +41,11 @@
         <div class="card-body text-light bg-dark rounded-bottom">
             <p class="card-text">{{ $post->caption }}</p>
             <p id="like-count-{{ $post->id }}">{{ $post->likes_count }} Likes</p>
-            <i class="fa-solid fa-heart fa-lg me-2 likebtn @if ($post->user_likes) after-like @endif" data-post-id="{{ $post->id }}"></i>
+            <button class="btn btn-outline-info editBtnForPost ms-0 likebtn" data-post-id="{{ $post->id }}"><i class="fa-solid fa-heart like_icon  @if ($post->user_likes) after-like @endif"></i></button> 
+
+            <button class="btn btn-outline-secondary editBtnForPost comment_section_modal_class" data-bs-toggle="modal" data-bs-target="#commentSection" id="comment_section_modal_btn" data-post-id="{{ $post->id }}" aria-hidden="true">
+                <i class="fa-solid fa-comment"></i>
+            </button>
         </div>
     </div>
 </div>

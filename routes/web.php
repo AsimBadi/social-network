@@ -9,9 +9,7 @@ use App\Http\Controllers\Frontend\ProfileController;
 use App\Http\Controllers\Frontend\SearchController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Middleware\AuthMiddleware;
-use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 
 Route::get('user/register', [UserController::class, 'register'])->name('register');
 Route::get('user', [UserController::class, 'login'])->name('login');
@@ -23,8 +21,8 @@ Route::post('user/check/usermail', [UserController::class, 'sendMailForForgotPas
 Route::post('user/update/password', [UserController::class, 'newPassword'])->name('change.password');
 Route::post('user/logout', [UserController::class, 'logout'])->name('logout');
 
-Route::get('user/verify/{token}', [UserController::class, 'verifyUser']);
-Route::get('user/forgot/password/{token}', [UserController::class, 'forgotPassword']);
+Route::get('user/verify/{token}', [UserController::class, 'verifyUser'])->name('verify.mail');
+Route::get('user/forgot/password/{token}', [UserController::class, 'forgotPassword'])->name('forgot.password');
 
 Route::middleware(AuthMiddleware::class)->group(function () {
     // Route::resource('profile', ProfileController::class);

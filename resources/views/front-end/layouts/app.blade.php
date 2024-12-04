@@ -97,7 +97,7 @@
 <script src="{{ asset('assets/js/file-upload.js') }}"></script>
 <script src="{{ asset('assets/js/typeahead.js') }}"></script>
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 @stack('js')
 </html>
 <script>
@@ -111,6 +111,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }, 100);
+    var dropdownElement = document.getElementById('UserDropdown');
+    if (dropdownElement) {
+        var dropdownInstance = new bootstrap.Dropdown(dropdownElement);
+    }
 });
 @session('success')
     setTimeout(() => {

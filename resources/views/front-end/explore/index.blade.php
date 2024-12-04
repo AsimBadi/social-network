@@ -13,19 +13,32 @@
         </div>
     </div>
     <div class="main-div container-fluid mt-4 row" id="append-posts">
-        @include('front-end.explore.load')
+        {{-- append posts --}}
     </div>
     <div id="loader" style="text-align: center; display: none;">
         <p>Loading...</p>
     </div>
+    @include('front-end.modals.modal')
     <script src="{{ asset('assets/js/likeFunctionality.js') }}"></script>
+    <script src="{{ asset('assets/js/commentFunctionality.js') }}"></script>
 @endsection
 @push('js')
     <script>
+        window.appRoutes = {
+        loadComments: "{{ route('load.comments') }}",
+        submitComment: "{{ route('submit.comment') }}",
+        gotoProfile: "{{ route('goto.profile', ':username') }}",
+        userId: @json(Auth::user()->id),
+        removeComment: "{{ route('remove.comment') }}",
+        likeRoute: "{{ route('likes.store') }}",
+        removeFollower: "{{ route('remove.follower') }}",
+        loadFollowers: "{{ route('load.followers') }}",
+        loadFollowings: "{{ route('load.followings') }}",
+    }
         let currentPage = 1;
         let currentButton = 'explore';
         let isLoading = false;
-
+        publicPosts(currentPage);
         $('.explor_btn').on('click', function() {
             const buttonValue = $(this).val();
 
@@ -62,6 +75,8 @@
                     if (response.trim() !== '') {
                         $('#append-posts').append(response);
                         currentPage++;
+                    }else{
+                        isLoading = true
                     }
                 },
                 complete: function() {
@@ -146,6 +161,10 @@
         }
     });
 });
-
+$(document).on('click', '.comment_section_modal_class', function (e) { 
+    e.preventDefault();
+    console.log('clicked');
+    
+});
     </script>
 @endpush

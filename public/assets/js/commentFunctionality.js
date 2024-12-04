@@ -1,13 +1,13 @@
 // Comment Functionality
 // Pass Post-Id to Submit Button
-$('.comment_section_modal_class').click(function (e) { 
+$(document).on('click', '.comment_section_modal_class', function (e) { 
     e.preventDefault();
     const postId = $(this).data('post-id');
     loadComments(postId);
     $('.submitbtn').data('post-id', postId);
 });
 // Submit Comment
-$('.submitbtn').click(function (e) { 
+$(document).on('click', '.submitbtn', function (e) { 
     e.preventDefault();
     const postId = $(this).data('post-id');
     const commentInput = $('.comment_input_value').val();    
