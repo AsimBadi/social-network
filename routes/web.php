@@ -36,7 +36,7 @@ Route::middleware(AuthMiddleware::class)->group(function () {
     // Route::post('action/request', [FollowController::class, 'actionOfRequest']);
 });
 
-Route::middleware(AuthMiddleware::class)->prefix('user')->group(function () {
+Route::middleware(['auth:web'])->prefix('user')->group(function () {
     Route::resource('profile', ProfileController::class);
     Route::resource('posts', PostController::class);
     Route::resource('likes', PostlikeController::class);

@@ -21,14 +21,14 @@ use Illuminate\Support\Facades\Mail;
 class UserController extends Controller
 {
     public function register() {
-        if (Auth::check()) {
+        if (auth()->guard('web')->check()) {
             return redirect()->route('profile.index');
         }
         return view('front-end.auth-pages.register');
     }
 
     public function login() {
-        if (Auth::check()) {
+        if (auth()->guard('web')->check()) {
             return redirect()->route('profile.index');
         }
         return view('front-end.auth-pages.login');
@@ -77,7 +77,7 @@ class UserController extends Controller
         if ($isUserVerified->verified == 0) {
             return redirect()->route('login')->with('error', 'Please Verify your E-mail');
         }elseif ($isUserVerified->verified == 1){
-            if(Auth::attempt($crenditials)) {
+            if(auth()->guard('web')->attempt($crenditials)) {
                 return redirect()->route('profile.index');
             }else{
                 return redirect()->route('login')->with('error', 'Either Mail or Password is Incorrect');
@@ -117,7 +117,7 @@ class UserController extends Controller
     }
 
     public function logout(Request $request) {
-        Auth::logout();
+        auth()->guard('web')->logout();
         return redirect()->route('login');
     }
 }
