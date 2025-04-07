@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\JwtAuthMiddleware;
 use App\Http\Requests\Backend\LoginRequest;
+use App\Http\Resources\UserResource;
 use App\Models\Post;
 use App\Models\PostLike;
 use App\Models\User;
@@ -35,7 +36,7 @@ class ApiAuthController extends Controller
             $user = auth()->user();
             return response()->json(['token' => $token, 'user' => $user], 200);
         } catch (\Throwable $th) {
-            return response()->json('Something Went Wrong', 404);
+            return response()->json($th->getMessage(), 404);
         }
     }
 
@@ -71,5 +72,11 @@ class ApiAuthController extends Controller
             'users' => $totalUsers,
             'comments' => $totalComments
         ], 200);
+    }
+
+    public function users()
+    {
+        $users = User::all();
+        return UserResource::collection($users);
     }
 }

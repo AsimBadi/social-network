@@ -104,4 +104,21 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function getPrivacyNameAttribute()
+    {
+        switch ($this->privacy) {
+            case '1':
+                return 'Male';
+                break;
+            
+            case '2':
+                return 'Female';
+                break;
+            
+            default:
+                return 'Not Defined';
+                break;
+        }
+    }
 }
