@@ -79,4 +79,10 @@ class ApiAuthController extends Controller
             'comments' => $totalComments
         ], 200);
     }
+
+    public function users()
+    {
+        $users = User::all();
+        return UserResource::collection($users);
+    }
 }
