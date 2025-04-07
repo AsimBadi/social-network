@@ -1,34 +1,43 @@
-<template>
-    <div>
-        <Header></Header>
-        <Sidebar></Sidebar>
-        <div class="content-wrapper">
-            <section class="content">
-                <div class="container-fluid m-2">
-                    <RouterView></RouterView>
-                </div>
-            </section>
-        </div>
-    </div>
-    <!-- <Register></Register> -->
-</template>
-<script>
-import { useRoute } from 'vue-router';
-import Register from './components/auth/Register.vue';
-import Header from './components/Header.vue';
-import Sidebar from './components/Sidebar.vue';
-import { computed } from 'vue';
-export default{
-    components:{
-        Header,
-        Sidebar,
-        Register
-    },
-    setup() {
-        const route = useRoute();
-        const isAuthPage = () => {
-            return route.path === '/admin/register'
-        }
-    }
-}
+<script setup>
+import { onBeforeMount, ref, watch } from 'vue'
+import { useColorModes } from '@coreui/vue'
+
+import { useThemeStore } from './store/theme.js'
+
+const { isColorModeSet, setColorMode } = useColorModes(
+  'coreui-free-vue-admin-template-theme',
+)
+const currentTheme = useThemeStore()
+
+onBeforeMount(() => {
+  const urlParams = new URLSearchParams(window.location.href.split('?')[1])
+  let theme = urlParams.get('theme')
+
+  if (theme !== null && theme.match(/^[A-Za-z0-9\s]+/)) {
+    theme = theme.match(/^[A-Za-z0-9\s]+/)[0]
+  }
+
+  if (theme) {
+    setColorMode(theme)
+    return
+  }
+
+  if (isColorModeSet()) {
+    return
+  }
+
+  setColorMode(currentTheme.theme)
+ 
+})
 </script>
+
+<template>
+  <router-view />
+</template>
+
+<style lang="scss">
+// Import Main styles for this application
+@use 'styles/style';
+// We use those styles to show code examples, you should remove them in your application.
+@use 'styles/examples';
+</style>
