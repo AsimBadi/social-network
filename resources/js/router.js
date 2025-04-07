@@ -24,7 +24,7 @@ const routes = [
           {
             path: 'user-management', // ✅ becomes /admin/user/management
             name: 'UserManagement',
-            component: () => import('./views/Layout.vue')
+            component: () => import('./views/UserManagement.vue')
           }
         ]
       },
