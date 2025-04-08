@@ -16,7 +16,6 @@ Route::middleware(JwtAuthMiddleware::class)->prefix('admin')->group(function () 
     Route::get('user', [ApiAuthController::class, 'getUser']);
     Route::get('logout', [ApiAuthController::class, 'logout']);
     Route::get('/dashboard', [ApiAuthController::class, 'dashboard']);
-    Route::get('/users', [ApiAuthController::class, 'users']);
     Route::get('/users', [UserManagementController::class, 'users']);
     Route::get('/user/{id}/edit', [UserManagementController::class, 'editUser']);
     Route::post('/user/{id}/update', [UserManagementController::class, 'updateUser']);
