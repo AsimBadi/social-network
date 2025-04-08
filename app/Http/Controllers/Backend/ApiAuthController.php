@@ -25,7 +25,13 @@ class ApiAuthController extends Controller
     {
         // dd($request->all());
         $credentials = $request->only('email', 'password');
-
+        $isUserBannedOrSuspended = User::where('email', $request->email)->where(function ($query) {
+            $query->where('is_suspended', 1)->orWhere('is_banned', 1);
+        })->first();
+        if($isUserBannedOrSuspended)
+        {
+            return response()->json('User is banned or suspended', 400);
+        }
         try {
             $token = JWTAuth::attempt($credentials);
             if(!$token)
@@ -72,11 +78,5 @@ class ApiAuthController extends Controller
             'users' => $totalUsers,
             'comments' => $totalComments
         ], 200);
-    }
-
-    public function users()
-    {
-        $users = User::all();
-        return UserResource::collection($users);
     }
 }

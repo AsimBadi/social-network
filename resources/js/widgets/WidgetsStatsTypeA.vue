@@ -33,10 +33,10 @@ onMounted( async () => {
     })
     if(res.status == 200)
     {
-      dashboardData.posts = res.data.posts 
-      dashboardData.likes = res.data.likes ? 0 : '0'
-      dashboardData.users = res.data.users
-      dashboardData.comments = res.data.comments ? 0 : '0'
+      dashboardData.posts = res.data.posts == 0 ? '0' : res.data.posts
+      dashboardData.likes = res.data.likes == 0 ? '0' : res.data.likes
+      dashboardData.users = res.data.users == 0 ? '0' : res.data.users
+      dashboardData.comments = res.data.comments == 0 ? '0' : res.data.comments
     }
   } catch (error) {
       console.log(error);

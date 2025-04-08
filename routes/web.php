@@ -11,6 +11,9 @@ use App\Http\Controllers\Frontend\UserController;
 use App\Http\Middleware\AuthMiddleware;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 Route::get('user/register', [UserController::class, 'register'])->name('register');
 Route::get('user', [UserController::class, 'login'])->name('login');
 Route::get('user/forgot-password/email', [UserController::class, 'userMailPage'])->name('user.mail.page');

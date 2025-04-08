@@ -13,19 +13,29 @@ const routes = [
     },
     {
         path: '/admin',
-        component: DefaultLayout, // wrapper layout
+        component: DefaultLayout,
         meta: { auth: true },
         children: [
           {
-            path: 'dashboard', // ✅ becomes /admin/dashboard
+            path: 'dashboard',
             name: 'Dashboard',
             component: () => import('./views/Dashboard.vue')
           },
           {
-            path: 'user-management', // ✅ becomes /admin/user/management
+            path: 'user-management',
             name: 'UserManagement',
-            component: () => import('./views/UserManagement.vue')
-          }
+            component: () => import('./views/UserManagement.vue'),
+          },
+          {
+            path: 'user-management/:id/edit',
+            name: 'EditUser',
+            component: () => import('./views/EditUser.vue')
+          },
+          {
+            path: 'user-management/:id/view',
+            name: 'ViewUser',
+            component: () => import('./views/ViewUser.vue')
+          },
         ]
       },
     {
@@ -47,18 +57,15 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
     const auth = useAuthStore()
     const { user } = storeToRefs(auth)
-  
-    // Try to get user if token exists but user is not yet set
+
     if (localStorage.getItem('token') && !user.value) {
-      await auth.getUser() // Make sure this updates user in the store
+      await auth.getUser()
     }
   
-    // Redirect to login if the route needs auth but no user is logged in
     if (!user.value && to.meta.auth) {
       return { name: 'login' }
     }
   
-    // Redirect to home if logged in and trying to access guest-only page
     if (user.value && to.meta.guest) {
       return { name: 'Dashboard' }
     }

@@ -30,7 +30,8 @@ class User extends Authenticatable implements JWTSubject
         'verified',
         'bio',
         'privacy',
-        'profile_picture'
+        'profile_picture',
+        'is_banned'
     ];
 
     /**
@@ -64,7 +65,7 @@ class User extends Authenticatable implements JWTSubject
         if ($this->profile_picture) {
             return asset('storage/images/' . $this->profile_picture);
         }
-        return asset('storage/images/instagram_default.png');
+        return asset('assets/images/instagram_default/Default_pfp.jpg');
     }
 
     public function post() {
@@ -109,6 +110,23 @@ class User extends Authenticatable implements JWTSubject
     {
         switch ($this->privacy) {
             case '1':
+                return 'Public';
+                break;
+            
+            case '2':
+                return 'Private';
+                break;
+            
+            default:
+                return 'Not Defined';
+                break;
+        }
+    }
+
+    public function getGenderNameAttribute()
+    {
+        switch ($this->gender) {
+            case '1':
                 return 'Male';
                 break;
             
@@ -120,5 +138,10 @@ class User extends Authenticatable implements JWTSubject
                 return 'Not Defined';
                 break;
         }
+    }
+
+    public function suspendedUser()
+    {
+        return $this->hasOne(SuspendedUser::class, 'user_id', 'id');
     }
 }
