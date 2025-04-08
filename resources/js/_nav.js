@@ -10,9 +10,9 @@ export default [
   },
   {
     component: 'CNavItem',
-    name: 'UserManagement',
+    name: 'User Management',
     to: '/admin/user-management',
-    icon: 'cil-speedometer',
+    icon: 'cilUser',
     badge: {
       color: 'primary',
     },

@@ -19,7 +19,10 @@ class UserResource extends JsonResource
             'profile_picture' => $this->image_url,
             'username' => $this->username,
             'email' => $this->email,
-            'privacy' => $this->privacy_name
+            'privacy' => $this->privacy_name,
+            'gender' => $this->gender_name,
+            'is_suspended' => $this->suspendedUser,
+            'is_banned' => $this->is_banned
         ];
     }
 }
