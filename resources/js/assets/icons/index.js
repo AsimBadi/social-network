@@ -26,6 +26,9 @@ import {
 } from '@coreui/icons'
 import { cifUs, cifBr, cifIn, cifFr, cifEs, cifPl } from '@coreui/icons'
 import {
+  cilCommentBubble,
+  cilTrash,
+  cilHeart,
   cilArrowBottom,
   cilArrowRight,
   cilArrowTop,
@@ -85,6 +88,9 @@ import {
 export const iconsSet = Object.assign(
   {},
   {
+    cilCommentBubble,
+    cilTrash,
+    cilHeart,
     cilArrowBottom,
     cilArrowRight,
     cilArrowTop,

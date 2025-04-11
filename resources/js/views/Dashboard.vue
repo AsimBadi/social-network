@@ -8,6 +8,8 @@ import avatar6 from '@/assets/images/avatars/6.jpg'
 import MainChart from './MainChart.vue'
 import WidgetsStatsA from './../widgets/WidgetsStatsTypeA.vue'
 import WidgetsStatsD from './../widgets/WidgetsStatsTypeD.vue'
+import { onMounted, reactive } from 'vue'
+import axios from 'axios'
 
 const progressGroupExample1 = [
   { title: 'Monday', value1: 34, value2: 78 },
@@ -34,101 +36,129 @@ const progressGroupExample3 = [
   { title: 'LinkedIn', icon: 'cib-linkedin', percent: 8, value: '27,319' },
 ]
 const tableExample = [
-  {
-    avatar: { src: avatar1, status: 'success' },
-    user: {
-      name: 'Yiorgos Avraamu',
-      new: true,
-      registered: 'Jan 1, 2023',
-    },
-    country: { name: 'USA', flag: 'cif-us' },
-    usage: {
-      value: 50,
-      period: 'Jun 11, 2023 - Jul 10, 2023',
-      color: 'success',
-    },
-    payment: { name: 'Mastercard', icon: 'cib-cc-mastercard' },
-    activity: '10 sec ago',
-  },
-  {
-    avatar: { src: avatar2, status: 'danger' },
-    user: {
-      name: 'Avram Tarasios',
-      new: false,
-      registered: 'Jan 1, 2023',
-    },
-    country: { name: 'Brazil', flag: 'cif-br' },
-    usage: {
-      value: 22,
-      period: 'Jun 11, 2023 - Jul 10, 2023',
-      color: 'info',
-    },
-    payment: { name: 'Visa', icon: 'cib-cc-visa' },
-    activity: '5 minutes ago',
-  },
-  {
-    avatar: { src: avatar3, status: 'warning' },
-    user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2023' },
-    country: { name: 'India', flag: 'cif-in' },
-    usage: {
-      value: 74,
-      period: 'Jun 11, 2023 - Jul 10, 2023',
-      color: 'warning',
-    },
-    payment: { name: 'Stripe', icon: 'cib-cc-stripe' },
-    activity: '1 hour ago',
-  },
-  {
-    avatar: { src: avatar4, status: 'secondary' },
-    user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2023' },
-    country: { name: 'France', flag: 'cif-fr' },
-    usage: {
-      value: 98,
-      period: 'Jun 11, 2023 - Jul 10, 2023',
-      color: 'danger',
-    },
-    payment: { name: 'PayPal', icon: 'cib-cc-paypal' },
-    activity: 'Last month',
-  },
-  {
-    avatar: { src: avatar5, status: 'success' },
-    user: {
-      name: 'Agapetus Tadeáš',
-      new: true,
-      registered: 'Jan 1, 2023',
-    },
-    country: { name: 'Spain', flag: 'cif-es' },
-    usage: {
-      value: 22,
-      period: 'Jun 11, 2023 - Jul 10, 2023',
-      color: 'primary',
-    },
-    payment: { name: 'Google Wallet', icon: 'cib-cc-apple-pay' },
-    activity: 'Last week',
-  },
-  {
-    avatar: { src: avatar6, status: 'danger' },
-    user: {
-      name: 'Friderik Dávid',
-      new: true,
-      registered: 'Jan 1, 2023',
-    },
-    country: { name: 'Poland', flag: 'cif-pl' },
-    usage: {
-      value: 43,
-      period: 'Jun 11, 2023 - Jul 10, 2023',
-      color: 'success',
-    },
-    payment: { name: 'Amex', icon: 'cib-cc-amex' },
-    activity: 'Last week',
-  },
+  // {
+  //   avatar: { src: avatar1, status: 'success' },
+  //   user: {
+  //     name: 'Yiorgos Avraamu',
+  //     new: true,
+  //     registered: 'Jan 1, 2023',
+  //   },
+  //   country: { name: 'USA', flag: 'cif-us' },
+  //   usage: {
+  //     value: 50,
+  //     period: 'Jun 11, 2023 - Jul 10, 2023',
+  //     color: 'success',
+  //   },
+  //   payment: { name: 'Mastercard', icon: 'cib-cc-mastercard' },
+  //   activity: '10 sec ago',
+  // },
+  // {
+  //   avatar: { src: avatar2, status: 'danger' },
+  //   user: {
+  //     name: 'Avram Tarasios',
+  //     new: false,
+  //     registered: 'Jan 1, 2023',
+  //   },
+  //   country: { name: 'Brazil', flag: 'cif-br' },
+  //   usage: {
+  //     value: 22,
+  //     period: 'Jun 11, 2023 - Jul 10, 2023',
+  //     color: 'info',
+  //   },
+  //   payment: { name: 'Visa', icon: 'cib-cc-visa' },
+  //   activity: '5 minutes ago',
+  // },
+  // {
+  //   avatar: { src: avatar3, status: 'warning' },
+  //   user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2023' },
+  //   country: { name: 'India', flag: 'cif-in' },
+  //   usage: {
+  //     value: 74,
+  //     period: 'Jun 11, 2023 - Jul 10, 2023',
+  //     color: 'warning',
+  //   },
+  //   payment: { name: 'Stripe', icon: 'cib-cc-stripe' },
+  //   activity: '1 hour ago',
+  // },
+  // {
+  //   avatar: { src: avatar4, status: 'secondary' },
+  //   user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2023' },
+  //   country: { name: 'France', flag: 'cif-fr' },
+  //   usage: {
+  //     value: 98,
+  //     period: 'Jun 11, 2023 - Jul 10, 2023',
+  //     color: 'danger',
+  //   },
+  //   payment: { name: 'PayPal', icon: 'cib-cc-paypal' },
+  //   activity: 'Last month',
+  // },
+  // {
+  //   avatar: { src: avatar5, status: 'success' },
+  //   user: {
+  //     name: 'Agapetus Tadeáš',
+  //     new: true,
+  //     registered: 'Jan 1, 2023',
+  //   },
+  //   country: { name: 'Spain', flag: 'cif-es' },
+  //   usage: {
+  //     value: 22,
+  //     period: 'Jun 11, 2023 - Jul 10, 2023',
+  //     color: 'primary',
+  //   },
+  //   payment: { name: 'Google Wallet', icon: 'cib-cc-apple-pay' },
+  //   activity: 'Last week',
+  // },
+  // {
+  //   avatar: { src: avatar6, status: 'danger' },
+  //   user: {
+  //     name: 'Friderik Dávid',
+  //     new: true,
+  //     registered: 'Jan 1, 2023',
+  //   },
+  //   country: { name: 'Poland', flag: 'cif-pl' },
+  //   usage: {
+  //     value: 43,
+  //     period: 'Jun 11, 2023 - Jul 10, 2023',
+  //     color: 'success',
+  //   },
+  //   payment: { name: 'Amex', icon: 'cib-cc-amex' },
+  //   activity: 'Last week',
+  // },
 ]
+const dashboardData = reactive({
+  posts:0,
+  likes:0,
+  user:0,
+  comments:0,
+  users:[]
+})
+onMounted( async () => {
+  try {
+    const res =  await axios.get('/api/admin/dashboard', {
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    if(res.status == 200)
+    {
+      dashboardData.posts = res.data.posts == 0 ? '0' : res.data.posts
+      dashboardData.likes = res.data.likes == 0 ? '0' : res.data.likes
+      dashboardData.user = res.data.users == 0 ? '0' : res.data.users
+      dashboardData.comments = res.data.comments == 0 ? '0' : res.data.comments
+      dashboardData.users = res.data.latestUsers
+      console.log(dashboardData);
+      
+    }
+  } catch (error) {
+      console.log(error);
+  }
+})
 </script>
 
 <template>
   <div>
-    <WidgetsStatsA class="mb-4" />
-    <CRow>
+    <WidgetsStatsA class="mb-4" :dashboardData="dashboardData" />
+    <!-- <CRow>
       <CCol :md="12">
         <CCard class="mb-4">
           <CCardBody>
@@ -193,14 +223,14 @@ const tableExample = [
           </CCardFooter>
         </CCard>
       </CCol>
-    </CRow>
-    <WidgetsStatsD class="mb-4" />
+    </CRow> -->
+    <!-- <WidgetsStatsD class="mb-4" /> -->
     <CRow>
       <CCol :md="12">
         <CCard class="mb-4">
-          <CCardHeader> Traffic &amp; Sales </CCardHeader>
+          <CCardHeader> Latest Users </CCardHeader>
           <CCardBody>
-            <CRow>
+            <!-- <CRow>
               <CCol :sm="12" :lg="6">
                 <CRow>
                   <CCol :xs="6">
@@ -274,8 +304,8 @@ const tableExample = [
                   </div>
                 </div>
               </CCol>
-            </CRow>
-            <br />
+            </CRow> -->
+            <!-- <br /> -->
             <CTable align="middle" class="mb-0 border" hover responsive>
               <CTableHead class="text-nowrap">
                 <CTableRow>
@@ -284,46 +314,43 @@ const tableExample = [
                   </CTableHeaderCell>
                   <CTableHeaderCell class="bg-body-secondary"> User </CTableHeaderCell>
                   <CTableHeaderCell class="bg-body-secondary text-center">
-                    Country
+                    Email
                   </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary"> Usage </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary"> Privacy </CTableHeaderCell>
                   <CTableHeaderCell class="bg-body-secondary text-center">
-                    Payment Method
+                    Gender
                   </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary"> Activity </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary"> Status </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow v-for="item in tableExample" :key="item.name">
+                <CTableRow v-for="item in dashboardData.users" :key="item.name">
                   <CTableDataCell class="text-center">
-                    <CAvatar size="md" :src="item.avatar.src" :status="item.avatar.status" />
+                    <CAvatar size="md" :src="item.image_url" />
                   </CTableDataCell>
                   <CTableDataCell>
-                    <div>{{ item.user.name }}</div>
+                    <div>{{ item.username }}</div>
                     <div class="small text-body-secondary text-nowrap">
-                      <span>{{ item.user.new ? 'New' : 'Recurring' }}</span> |
-                      {{ item.user.registered }}
                     </div>
                   </CTableDataCell>
                   <CTableDataCell class="text-center">
-                    <CIcon size="xl" :name="item.country.flag" :title="item.country.name" />
+                     <span>{{ item.email }}</span>
                   </CTableDataCell>
                   <CTableDataCell>
                     <div class="d-flex justify-content-between align-items-baseline">
-                      <div class="fw-semibold">{{ item.usage.value }}%</div>
                       <div class="text-nowrap text-body-secondary small ms-3">
-                        {{ item.usage.period }}
+                        {{ item.privacy_name }}
                       </div>
                     </div>
-                    <CProgress thin :color="item.usage.color" :value="item.usage.value" />
                   </CTableDataCell>
                   <CTableDataCell class="text-center">
-                    <CIcon size="xl" :name="item.payment.icon" />
+                     <span>{{ item.gender_name }}</span>
                   </CTableDataCell>
                   <CTableDataCell>
-                    <div class="small text-body-secondary">Last login</div>
                     <div class="fw-semibold text-nowrap">
-                      {{ item.activity }}
+                      <CBadge color="warning" v-if="item.is_suspended">Suspended</CBadge>
+                      <CBadge color="danger" v-else-if="item.is_banned">Banned</CBadge>
+                      <CBadge color="success" v-else>Active</CBadge>
                     </div>
                   </CTableDataCell>
                 </CTableRow>

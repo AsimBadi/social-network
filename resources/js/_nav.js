@@ -21,11 +21,20 @@ export default [
     component: 'CNavItem',
     name: 'Post Management',
     to: '/admin/post-management',
-    icon: 'cidDocument',
+    icon: 'cilExternalLink',
     badge: {
       color: 'primary',
     },
   },
+  // {
+  //   component: 'CNavItem',
+  //   name: 'Comment Management',
+  //   to: '/admin/comment-management',
+  //   icon: 'cilCommentBubble',
+  //   badge: {
+  //     color: 'primary',
+  //   },
+  // },
   // {
   //   component: 'CNavTitle',
   //   name: 'Theme',

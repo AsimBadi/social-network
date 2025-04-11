@@ -13,7 +13,7 @@ class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    protected $appends = ['image_url', 'is_user_following'];
+    protected $appends = ['image_url', 'is_user_following', 'gender_name', 'privacy_name'];
     /**
      * The attributes that are mass assignable.
      *
