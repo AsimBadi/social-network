@@ -15,11 +15,20 @@ class UserManagementController extends Controller
 {
     public function users(Request $request)
     {
-        $perPage = $request->input('perPage');
+        $perPage = $request->input('perPage', 10);
+        $search = $request->input('search');
         $todayDate = Carbon::today()->toDateString();
         $users = User::with(['suspendedUser' => function ($query) use ($todayDate) {
             $query->whereDate('from', $todayDate)->whereDate('to', '>=', $todayDate);
-        }])->paginate($perPage);
+        }])
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('email', 'LIKE', "%$search%")
+                  ->orWhere('phone_no', 'LIKE', "%$search%")
+                  ->orWhere('username', 'LIKE', "%$search%");
+            });
+        })
+        ->paginate($perPage);
 
         return UserResource::collection($users);
     }

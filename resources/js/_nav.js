@@ -17,6 +17,15 @@ export default [
       color: 'primary',
     },
   },
+  {
+    component: 'CNavItem',
+    name: 'Post Management',
+    to: '/admin/post-management',
+    icon: 'cidDocument',
+    badge: {
+      color: 'primary',
+    },
+  },
   // {
   //   component: 'CNavTitle',
   //   name: 'Theme',

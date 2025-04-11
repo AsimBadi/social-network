@@ -1,4 +1,7 @@
 <template>
+    <div class="d-flex justify-content-end align-items-center mb-2">
+        <input type="text" class="form-control w-50 ms-auto" v-model="userSearch" placeholder="Search User">
+    </div>
         <table class="table table-bordered table-striped" id="usersTable">
             <thead>
                 <tr>
@@ -66,12 +69,39 @@
       <CButton color="primary" @click="() => { suspendUser(suspendingUserId) }">Save changes</CButton>
     </CModalFooter>
   </CModal>
+    <div class="d-flex justify-content-center align-items-center">
+        <select class="form-select me-2 mb-3" v-model="itemsPerPage" style="width: 80px;">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+      <vue-awesome-paginate
+        :total-items="totalItems"
+        :items-per-page="Number(itemsPerPage)"
+        :max-pages-shown="totalPages"
+        v-model="currentPage"
+        :show-breakpoint-buttons="false"
+        :show-jump-buttons="true"
+        @click="onClickHandler"
+      />
+    </div>
 </template>
 <script setup>
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import router from '../router'
 import Swal from 'sweetalert2'
+
+const currentPage = ref(1)
+const totalItems = ref(0)
+const itemsPerPage = ref(10)
+const totalPages = ref(1)
+const userSearch = ref('')
+
+const onClickHandler = (page) => {
+    fetchData(page)
+};
 
 const visibleVerticallyCenteredDemo = ref(false)
 const suspendUserDates = ref({
@@ -81,17 +111,14 @@ const suspendUserDates = ref({
 const suspendingUserId = ref(0)
 let users = ref([])
 const errors = ref({})
-const headers = [
-    { text: "Id", name: 'id'},
-    { text: "Username", name: 'username'},
-    { text: "Email", name: 'email'},
-    { text: "Privacy", name: 'privacy'},
-    { text: "Gender", name: 'gender'},
-]
 
-onMounted( async () => {
+onMounted(() => {
+    fetchData(currentPage)
+})
+
+const fetchData = async (page) => {
     try {
-        const res = await axios.get('/api/admin/users', {
+        const res = await axios.get(`/api/admin/users?perPage=${itemsPerPage.value}&page=${page}&search=${userSearch.value}`, {
             headers:{
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
@@ -99,14 +126,24 @@ onMounted( async () => {
         if(res.status == 200)
         {
             users.value = res.data.data
+            totalItems.value = Number(res.data.total)
+            totalPages.value = res.data.meta.last_page
             console.log(users);
             
         }
     } catch (error) {
         console.log(error);
     }
-})
+}
 
+watch(itemsPerPage, () => {
+    currentPage.value = 1
+    fetchData(1)
+})
+watch(userSearch, () => {
+    currentPage.value = 1
+    fetchData(1)
+})
 const deleteUser = async (userId,index) => {
     Swal.fire({
         title: "Are you sure?",
@@ -200,3 +237,42 @@ const banUser = async (userId) => {
     });
 }
 </script>
+<style>
+  .pagination-container {
+    display: flex;
+
+    column-gap: 10px;
+  }
+
+  .paginate-buttons {
+    height: 40px;
+
+    width: 40px;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+
+    background-color: rgb(242, 242, 242);
+
+    border: 1px solid rgb(217, 217, 217);
+
+    color: black;
+  }
+
+  .paginate-buttons:hover {
+    background-color: #d8d8d8;
+  }
+
+  .active-page {
+    background-color: #3498db;
+
+    border: 1px solid #3498db;
+
+    color: white;
+  }
+
+  .active-page:hover {
+    background-color: #2988c8;
+  }
+</style>
