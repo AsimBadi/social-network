@@ -1,17 +1,22 @@
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { CChart } from '@coreui/vue-chartjs'
 import { getStyle } from '@coreui/utils'
 import axios from 'axios'
 
 const widgetChartRef1 = ref()
 const widgetChartRef2 = ref()
-const dashboardData = reactive({
-  posts:0,
-  likes:0,
-  users:0,
-  comments:0
+const props = defineProps({
+  dashboardData: {
+    type: Object,
+    required: true
+  }
 })
+const dashboardData = ref({})
+watch(() => props.dashboardData, (newVal) => {
+  dashboardData.value = newVal // clone to avoid direct mutation
+}, { immediate: true })
+
 onMounted( async () => {
   document.documentElement.addEventListener('ColorSchemeChange', () => {
     if (widgetChartRef1.value) {
@@ -24,23 +29,6 @@ onMounted( async () => {
       widgetChartRef2.value.chart.update()
     }
   })
-
-  try {
-    const res =  await axios.get('/api/admin/dashboard', {
-      headers:{
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-    if(res.status == 200)
-    {
-      dashboardData.posts = res.data.posts == 0 ? '0' : res.data.posts
-      dashboardData.likes = res.data.likes == 0 ? '0' : res.data.likes
-      dashboardData.users = res.data.users == 0 ? '0' : res.data.users
-      dashboardData.comments = res.data.comments == 0 ? '0' : res.data.comments
-    }
-  } catch (error) {
-      console.log(error);
-  }
 })
 </script>
 
@@ -49,7 +37,7 @@ onMounted( async () => {
     <CCol :sm="6" :xl="4" :xxl="3">
       <CWidgetStatsA color="primary">
         <template #value
-        v-if="dashboardData.users">{{ dashboardData.users }}
+        v-if="dashboardData.user">{{ dashboardData.user }}
           <!-- <span class="fs-6 fw-normal" v-if="dashboardData.users">{{ dashboardData.users }}</span> -->
         <!-- </span> -->
         </template>

@@ -39,8 +39,18 @@ const routes = [
           },
           {
             path: 'post-management',
-            name: 'ViewUser',
+            name: 'PostManagement',
             component: () => import('./views/PostManagement.vue')
+          },
+          {
+            path: 'post-management/:id/edit',
+            name: 'EditPost',
+            component: () => import('./views/EditPost.vue')
+          },
+          {
+            path: 'post-management/:id/view',
+            name: 'ViewPost',
+            component: () => import('./views/ViewPost.vue')
           },
         ]
       },

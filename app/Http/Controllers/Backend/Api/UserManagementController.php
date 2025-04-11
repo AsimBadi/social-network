@@ -30,7 +30,25 @@ class UserManagementController extends Controller
         })
         ->paginate($perPage);
 
-        return UserResource::collection($users);
+        return response()->json([
+            'data' => UserResource::collection($users)->resolve(),
+            'links' => [
+                'first' => $users->url(1),
+                'last' => $users->url($users->lastPage()),
+                'prev' => $users->previousPageUrl(),
+                'next' => $users->nextPageUrl(),
+            ],
+            'meta' => [
+                'current_page' => $users->currentPage(),
+                'from' => $users->firstItem(),
+                'last_page' => $users->lastPage(),
+                'path' => $users->path(),
+                'per_page' => $users->perPage(),
+                'to' => $users->lastItem(),
+                'total' => $users->total(),
+            ]
+        ]);
+        // return UserResource::collection($users);
     }
 
     public function editUser($id)

@@ -72,11 +72,13 @@ class ApiAuthController extends Controller
         $totalLikes = PostLike::count();
         $totalUsers = User::count();
         $totalComments = Comment::count();
+        $latestUsers = User::orderBy('id', 'desc')->limit(5)->get();
         return response()->json([
             'posts' => $totalPosts,
             'likes' => $totalLikes,
             'users' => $totalUsers,
-            'comments' => $totalComments
+            'comments' => $totalComments,
+            'latestUsers' => $latestUsers
         ], 200);
     }
 

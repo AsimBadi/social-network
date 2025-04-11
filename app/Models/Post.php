@@ -38,4 +38,14 @@ class Post extends Model
     public function followers() {
         return $this->hasMany(FollowUser::class, 'user_id', 'id');
     }
+
+    public function getImageLinksAttribute()
+    {
+        return $this->image->map(function ($image) {
+            return [
+                'image' => asset('storage/images/' . $image->image),
+                'id' => $image->id
+            ];
+        });
+    }
 }

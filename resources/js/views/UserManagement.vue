@@ -40,9 +40,6 @@
                             </CDropdownMenu>
                         </CDropdown>
                     </td>
-                    <!-- <td><button class="btn btn-warning">View</button></td>
-                    <td><button class="btn btn-primary">Edit</button></td>
-                    <td><button class="btn btn-danger">Delete</button></td> -->
                 </tr>
             </tbody>
         </table>
@@ -76,15 +73,15 @@
             <option value="50">50</option>
             <option value="100">100</option>
         </select>
-      <vue-awesome-paginate
-        :total-items="totalItems"
-        :items-per-page="Number(itemsPerPage)"
-        :max-pages-shown="totalPages"
-        v-model="currentPage"
-        :show-breakpoint-buttons="false"
-        :show-jump-buttons="true"
-        @click="onClickHandler"
-      />
+        <vue-awesome-paginate
+            :total-items="totalItems"
+            :items-per-page="Number(itemsPerPage)"
+            :max-pages-shown="totalPages"
+            v-model="currentPage"
+            :show-breakpoint-buttons="false"
+            :show-jump-buttons="true"
+            @click="onClickHandler"
+        />
     </div>
 </template>
 <script setup>
@@ -190,6 +187,7 @@ const suspendUser = async (userId) => {
         })
         if(res.status == 200)
         {
+            visibleVerticallyCenteredDemo.value = false
             suspendUserDates.value = {}
             Swal.fire({
                 toast: true,

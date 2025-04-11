@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\Api\PostController;
 use App\Http\Controllers\Backend\Api\UserManagementController;
 use App\Http\Controllers\Backend\ApiAuthController;
 use App\Http\Middleware\JwtAuthMiddleware;
@@ -22,4 +23,10 @@ Route::middleware(JwtAuthMiddleware::class)->prefix('admin')->group(function () 
     Route::get('/user/{id}/delete', [UserManagementController::class, 'deleteUser']);
     Route::post('/suspend/{id}/user', [UserManagementController::class, 'suspendUser']);
     Route::get('/ban/{id}/user', [UserManagementController::class, 'banUser']);
+    Route::get('posts', [PostController::class, 'posts']);
+    Route::get('/post/{id}/delete', [PostController::class, 'delete']);
+    Route::get('/post/{id}/edit', [PostController::class, 'edit']);
+    Route::post('/post/{id}/update', [PostController::class, 'update']);
+    Route::get('/comments/{id}', [PostController::class, 'comments']);
+    Route::get('/comments/{id}/delete', [PostController::class, 'deleteComments']);
 });
