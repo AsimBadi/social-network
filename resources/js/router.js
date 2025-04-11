@@ -3,6 +3,7 @@ import { createRouter, createWebHistory  } from 'vue-router'
 import DefaultLayout from './layout/DefaultLayout.vue'
 import { useAuthStore } from './store/auth'
 import { storeToRefs } from 'pinia'
+import { ref, watch } from 'vue'
 
 const routes = [
     {
@@ -36,6 +37,11 @@ const routes = [
             name: 'ViewUser',
             component: () => import('./views/ViewUser.vue')
           },
+          {
+            path: 'post-management',
+            name: 'ViewUser',
+            component: () => import('./views/PostManagement.vue')
+          },
         ]
       },
     {
@@ -62,11 +68,11 @@ router.beforeEach(async (to, from) => {
       await auth.getUser()
     }
   
-    if (!user.value && to.meta.auth) {
+    if (!localStorage.getItem('token') && to.meta.auth) {
       return { name: 'login' }
     }
   
-    if (user.value && to.meta.guest) {
+    if (localStorage.getItem('token') && to.meta.guest) {
       return { name: 'Dashboard' }
     }
 })

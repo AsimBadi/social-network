@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\FollowUser;
 use App\Models\User;
+use App\Notifications\UserFollowed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,6 +48,8 @@ class FollowController extends Controller
                     'followed_by_id' => Auth::user()->id,
                     'status' => 2
                 ]);
+                $followedUser = User::find($request->userId);
+                $userToFollow->notify(new UserFollowed($followedUser));
                 return response()->json([
                     'status' => 400,
                     'message' => 'Following'
